@@ -58,6 +58,11 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderReferenceId(utils.generateReferenceNumber());
         order.setDescription(request.getDescription());
 
+        if(request.getItems().isEmpty() || utils.isDuplicateEntries(request.getItems()))
+        {
+            throw new OpsNotAllowed("No Item or Duplicate Items not allowed");
+        };
+
         BigDecimal total = BigDecimal.ZERO;
         for (ItemDTO line : request.getItems()) {
             Item item = itemRepository.findById(line.getId())
